@@ -1,4 +1,5 @@
 import csv
+import math
 
 
 def find_length(coords1: tuple, coords2: tuple) -> float:
@@ -10,7 +11,7 @@ def find_length(coords1: tuple, coords2: tuple) -> float:
     :return: length
     """
     return round(
-        ((coords1[0] - coords2[0]) ** 2 + (coords1[1] - coords2[1]) ** 2) ** (1 / 2), 3
+        math.sqrt((coords1[0] - coords2[0]) ** 2 + (coords1[1] - coords2[1]) ** 2), 3
     )
 
 
@@ -44,7 +45,7 @@ def find_tri_area(coords1: tuple, coords2: tuple, coords3: tuple) -> float:
     b = find_length(coords2, coords3)
     c = find_length(coords3, coords1)
     s = (a + b + c) / 2
-    return round((s * (s - a) * (s - b) * (s - c)) ** (1 / 2), 3)
+    return round(math.sqrt(abs(s * (s - a) * (s - b) * (s - c))), 3)
 
 
 def find_poly_area(
