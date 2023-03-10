@@ -4,6 +4,7 @@ from utils import find_tri_area, read_csv, write_csv
 
 
 def main():
+    # Read the command line arguments
     args = sys.argv[1:]
     if len(args) == 0:
         print("Usage: FindSafeTriangle.py <filename>")
@@ -21,9 +22,7 @@ def main():
     # all possible coordinate combinations without replacement
     triangles = itertools.combinations(dataset, 3)
     for triangle in triangles:
-        areas[(triangle[0], triangle[1], triangle[2])] = find_tri_area(
-            triangle[0], triangle[1], triangle[2]
-        )
+        areas[triangle] = find_tri_area(*triangle)
 
     # Retrieving the dict key (triangle coords) with the maximum area and
     # sorting the coords using the sorted function setting the key as an anonymous

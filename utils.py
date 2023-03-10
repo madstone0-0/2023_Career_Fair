@@ -1,4 +1,5 @@
 import csv
+import math
 
 
 def find_length(coords1: tuple, coords2: tuple) -> float:
@@ -10,6 +11,21 @@ def find_length(coords1: tuple, coords2: tuple) -> float:
     :return: length
     """
     return ((coords1[0] - coords2[0]) ** 2 + (coords1[1] - coords2[1]) ** 2) ** (1 / 2)
+
+
+def find_cross_prod(pol):
+    """
+    Calculates the cross product of two vectors
+    :param pol:
+    :return:
+    """
+    x1 = pol[1][0] - pol[0][0]
+    y1 = pol[1][1] - pol[0][1]
+
+    x2 = pol[2][0] - pol[0][0]
+    y2 = pol[2][1] - pol[0][1]
+
+    return x1 * y2 - y1 * x2
 
 
 def find_tri_area(coords1: tuple, coords2: tuple, coords3: tuple) -> float:
@@ -30,6 +46,49 @@ def find_tri_area(coords1: tuple, coords2: tuple, coords3: tuple) -> float:
     return (s * (s - a) * (s - b) * (s - c)) ** (1 / 2)
 
 
+def find_poly_area(
+    coords1: tuple, coords2: tuple, coords3: tuple, coords4: tuple
+) -> float:
+    """
+    Calculates the area of a polygon using the Shoelace Formula, i.e.
+    A = 1/2 * abs( x1y2 + x2y3 + x3y4 + x4y1 - y1x2 - y2x3 - y3x4 - y4x1 )
+    :param coords1:
+    :param coords2:
+    :param coords3:
+    :param coords4:
+    :return:
+    """
+    a = coords1[0] * coords2[1] - coords1[1] * coords2[0]
+    b = coords2[0] * coords3[1] - coords2[1] * coords3[0]
+    c = coords3[0] * coords4[1] - coords3[1] * coords4[0]
+    d = coords4[0] * coords1[1] - coords4[1] * coords1[0]
+
+    return 1 / 2 * abs(a + b + c + d)
+
+
+def is_convex(polygon: tuple) -> bool:
+    """
+    Checks if a polygon is convex by calculating the cross product of
+    three consecutive points in the polygon. If the cross product is
+    positive, the polygon is convex, otherwise it is concave.
+    :param polygon:
+    :return:
+    """
+    n = len(polygon)
+    prev = 0
+    curr = 0
+
+    for i in range(n):
+        temp = [polygon[1], polygon[(i + 1) % n], polygon[(i + 2) % n]]
+        curr = find_cross_prod(temp)
+        if curr != 0:
+            if curr * prev < 0:
+                return False
+            else:
+                prev = curr
+    return True
+
+
 def read_csv(filename: str) -> list:
     """
     Reads a csv file and returns a list of tuples containing
@@ -43,14 +102,14 @@ def read_csv(filename: str) -> list:
         return [(float(row[0]), float(row[1])) for row in reader]
 
 
-def write_csv(filename: str, coords: list) -> None:
+def write_csv(filename: str, coords: list | tuple) -> None:
     """
     Writes a list of tuples to a csv file
     :param filename:
     :param coords:
     :return: None
     """
-    with open(f"{filename}.csv", mode="w+", encoding="utf-8") as file:
+    with open(f"{filename}.csv", mode="w+", encoding="utf-8", newline="") as file:
         writer = csv.writer(file)
         writer.writerow(["x", "y"])
         writer.writerows(coords)
