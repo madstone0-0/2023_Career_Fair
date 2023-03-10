@@ -1,5 +1,4 @@
 import csv
-import math
 
 
 def find_length(coords1: tuple, coords2: tuple) -> float:
@@ -10,7 +9,9 @@ def find_length(coords1: tuple, coords2: tuple) -> float:
     :param coords2:
     :return: length
     """
-    return ((coords1[0] - coords2[0]) ** 2 + (coords1[1] - coords2[1]) ** 2) ** (1 / 2)
+    return round(
+        ((coords1[0] - coords2[0]) ** 2 + (coords1[1] - coords2[1]) ** 2) ** (1 / 2), 3
+    )
 
 
 def find_cross_prod(pol):
@@ -43,7 +44,7 @@ def find_tri_area(coords1: tuple, coords2: tuple, coords3: tuple) -> float:
     b = find_length(coords2, coords3)
     c = find_length(coords3, coords1)
     s = (a + b + c) / 2
-    return (s * (s - a) * (s - b) * (s - c)) ** (1 / 2)
+    return round((s * (s - a) * (s - b) * (s - c)) ** (1 / 2), 3)
 
 
 def find_poly_area(
@@ -63,7 +64,7 @@ def find_poly_area(
     c = coords3[0] * coords4[1] - coords3[1] * coords4[0]
     d = coords4[0] * coords1[1] - coords4[1] * coords1[0]
 
-    return 1 / 2 * abs(a + b + c + d)
+    return round(1 / 2 * abs(a + b + c + d), 3)
 
 
 def is_convex(polygon: tuple) -> bool:
@@ -87,6 +88,29 @@ def is_convex(polygon: tuple) -> bool:
             else:
                 prev = curr
     return True
+
+
+def is_inside_tri(point: tuple, triangle: tuple) -> bool:
+    """
+    Checks if a point is inside a triangle by calculating the area of
+    the triangle and the sum of the areas of the three triangles
+    formed by the point and the three vertices of the triangle.
+    If the sum of the areas is equal to the area of the triangle,
+    the point is inside the triangle, otherwise it is outside.
+    :param point:
+    :param triangle:
+    :return:
+    """
+    # Check if point is one of the vertices
+    # If it is, it is not inside the triangle.
+    if any([point == x for x in triangle]):
+        return False
+
+    a = find_tri_area(*triangle)
+    a1 = find_tri_area(point, triangle[0], triangle[1])
+    a2 = find_tri_area(point, triangle[1], triangle[2])
+    a3 = find_tri_area(point, triangle[0], triangle[2])
+    return a == (a1 + a2 + a3)
 
 
 def read_csv(filename: str) -> list:
