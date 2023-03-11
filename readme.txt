@@ -26,8 +26,8 @@ Usage: python3 ./FindSafeSurrounding.py <filename>
 Tested on: Python 3.11.2 and 3.10.6
 Requirements: Python 3.7+
 Supports:
-Isolating location of surviour.
+Isolating location of a survivor.
 Generating all possible triangles.
-Determining the smallest triangular area the surviour is located in if possible.
-If smallest triangular area cannot be determined, the closest two points are instead returned
+Determining the smallest triangular area, the survivor is located in if possible.
+If the smallest triangular area cannot be determined, the closest two points are instead returned.
 Records the coordinates of the smallest triangular area or closest two points to the file safesurrounding.csv
